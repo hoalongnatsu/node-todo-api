@@ -58,3 +58,33 @@ describe('GET /todos/:id', function () {
          .end(done)
    });
 });
+
+describe('DELETE /todo/:id', function () {
+   it('Should delete todo and return todo', (done) => {
+      let hexId = todos[0]._id.toHexString();
+
+      request(app)
+         .delete(`/todo/${hexId}`)
+         .expect(200)
+         .expect((res) => {
+            expect(res.body.todo.text).toBe(todos[0].text);
+         })
+         .end(done);
+   });
+
+   it('Should get 404 not found', (done) => {
+      let hexId = new ObjectID().toHexString();
+
+      request(app)
+         .delete(`/todo/${hexId}`)
+         .expect(404)
+         .end(done)
+   });
+
+   it('Should get 404 for none object id', (done) => {
+      request(app)
+         .delete(`/todo/123`)
+         .expect(404)
+         .end(done)
+   });
+});
